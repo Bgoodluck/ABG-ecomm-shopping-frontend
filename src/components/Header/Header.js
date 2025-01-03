@@ -99,7 +99,7 @@ const Header = () => {
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -154,7 +154,7 @@ const Header = () => {
               {user?.profilePic ? (
                 <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-violet-600">
                   <img
-                    src={profilePicUrl}
+                    src={profilePicUrl || fallbackIcon}
                     alt={user.firstName}
                     className="w-full h-full object-cover"
                   />
@@ -355,7 +355,7 @@ const Header = () => {
                     {user?.profilePic ? (
                       <div className="w-10 h-10 rounded-full overflow-hidden">
                         <img
-                          src={profilePicUrl}
+                          src={profilePicUrl || fallbackIcon}
                           alt={user.firstName}
                           className="w-full h-full object-cover"
                         />
