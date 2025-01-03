@@ -1,4 +1,4 @@
-const backendURL = "http://localhost:8080"
+const backendURL = "https://abg-ecomm-shopping-backend.onrender.com"
 
 export const summaryApi = {
     signUp : {
