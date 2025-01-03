@@ -154,7 +154,7 @@ const Header = () => {
               {user?.profilePic ? (
                 <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-violet-600">
                   <img
-                    src={profilePicUrl || fallbackIcon}
+                    src={profilePicUrl}
                     alt={user.firstName}
                     className="w-full h-full object-cover"
                   />
@@ -355,7 +355,7 @@ const Header = () => {
                     {user?.profilePic ? (
                       <div className="w-10 h-10 rounded-full overflow-hidden">
                         <img
-                          src={profilePicUrl || fallbackIcon}
+                          src={profilePicUrl}
                           alt={user.firstName}
                           className="w-full h-full object-cover"
                         />
@@ -469,4 +469,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Header;
