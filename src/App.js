@@ -19,20 +19,41 @@ function App() {
 
 
   const fetchUserDetails = async () => {
+    try {
+      // Get token from localStorage
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        console.log('No token found, user not authenticated');
+        return;
+      }
 
-    const response = await fetch(summaryApi.current_user.url, {
-      method: summaryApi.current_user.method,
-      credentials: "include"
-    });
+      const response = await fetch(summaryApi.current_user.url, {
+        method: summaryApi.current_user.method,
+        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
 
-    const responseData = await response.json();
-
-    if (responseData.success) {
-      dispatch(setUserDetails(responseData.data))
+      const responseData = await response.json();
+      
+      if (responseData.success) {
+        dispatch(setUserDetails(responseData.data));
+      } else {
+        console.log('User details fetch failed:', responseData.message);
+        // Handle failed auth - maybe clear token and redirect to login
+        if (response.status === 401) {
+          localStorage.removeItem('token');
+          dispatch(setUserDetails(null));
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user details:', error);
     }
+  };
 
-    console.log("data-user", responseData)
-  }
 
 
 

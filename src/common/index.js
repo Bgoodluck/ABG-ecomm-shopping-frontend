@@ -1,4 +1,4 @@
-const backendURL = "https://abg-ecomm-shopping-backend.onrender.com"
+const backendURL = process.env.REACT_APP_BACKEND_URL || "https://abg-ecomm-shopping-backend.onrender.com"
 
 export const summaryApi = {
     signUp : {
