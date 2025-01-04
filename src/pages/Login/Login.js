@@ -1,33 +1,36 @@
 import React, { useContext, useState } from "react";
 import { FaEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import loginIcons from "../../assest/signin.gif";
 import { summaryApi } from "../../common";
 import { toast } from "react-toastify";
 import Context from "../../context";
+import { setUserDetails } from "../../store/userSlice";
 
-function Login(){
+function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [focusedInput, setFocusedInput] = useState(null);
   const [data, setData] = useState({
     email: '',
     password: ''    
   });
-  const navigate = useNavigate()
-  const {fetchUserDetails, fetchUserAddToCart} = useContext(Context)
+  
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { fetchUserDetails, fetchUserAddToCart } = useContext(Context);
 
-  const handleOnChange = (e)=>{
-    const { name, value } = e.target
-    setData((prev)=>({
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    setData((prev) => ({
       ...prev,
       [name]: value
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
     if (!data.email || !data.password) {
       toast.error("Please enter both email and password");
       return;
@@ -43,24 +46,34 @@ function Login(){
         body: JSON.stringify(data)
       });
 
-     
       const responseData = await response.json();
 
-      
       if (response.ok) {
-       
         if (responseData.success) {
+          // Store both user data and token
           localStorage.setItem("user", JSON.stringify(responseData.userData));
-          toast.success(responseData.message || "Login successful");
-          navigate("/");
-          fetchUserDetails()
-          fetchUserAddToCart()
-        } else {
           
+          // Store the JWT token
+          if (responseData.token) {
+            localStorage.setItem("token", responseData.token);
+          } else {
+            console.warn("No token received from server");
+          }
+
+          // Update Redux store with user details
+          dispatch(setUserDetails(responseData.userData));
+
+          toast.success(responseData.message || "Login successful");
+          
+          // Fetch updated user details and cart
+          await fetchUserDetails();
+          await fetchUserAddToCart();
+          
+          navigate("/");
+        } else {
           toast.error(responseData.message || "Login failed");
         }
       } else {
-
         switch (response.status) {
           case 401:
             toast.error("Invalid email or password");
@@ -76,11 +89,10 @@ function Login(){
         }
       }
     } catch (error) {
-      
       console.error("Login error:", error);
       toast.error("Unable to connect to the server. Please check your internet connection.");
     }
-  }
+  };
 
 
   return (
