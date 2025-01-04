@@ -23,10 +23,12 @@ const UserProfile = ({ onClose, userId }) => {
        const fetchProfile = async () => {
            if (userId) {
                try {
+                const token = localStorage.getItem('token');
                    const response = await fetch(`${summaryApi.getProfileDetails.url}/${userId}`, {
                        method: summaryApi.getProfileDetails.method,
                        credentials: "include",
                        headers: {
+                           'Authorization': `Bearer ${token}`,
                            'Content-Type': 'application/json'
                        }
                    });
