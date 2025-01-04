@@ -12,6 +12,7 @@ import { ROLE } from "../../common/role";
 import Context from "../../context";
 import UserProfile from "../UserProfile/UserProfile";
 import ProfileModal from "../UserProfileModal/UserProfileModal";
+import fallbackIcon from "../../assest/logo2.png"
 
 const Header = () => {
   const user = useSelector((state) => state?.user?.user);
