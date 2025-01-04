@@ -52,6 +52,7 @@ function Login() {
         if (responseData.success) {
           // Store both user data and token
           localStorage.setItem("user", JSON.stringify(responseData.userData));
+          localStorage.setItem("token", JSON.stringify(responseData.userData.token));
           
           // Store the JWT token
           if (responseData.token) {
