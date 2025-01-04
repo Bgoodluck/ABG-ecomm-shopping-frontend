@@ -59,23 +59,36 @@ function App() {
 
   const fetchUserAddToCart = async () => {
     try {
-        const response = await fetch(summaryApi.cartCounter.url, {
-            method: summaryApi.cartCounter.method,
-            credentials: "include"
-        });
-        
-        const responseData = await response.json();
-        console.log("Cart Counter Full Response:", responseData);
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        setCartCount(0);
+        return;
+      }
 
-        
+      const response = await fetch(summaryApi.cartCounter.url, {
+        method: summaryApi.cartCounter.method,
+        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const responseData = await response.json();
+      
+      if (responseData.success) {
         const cartCount = responseData?.data?.count || responseData?.count || 0;
         setCartCount(cartCount);
-
-    } catch (error) {
-        console.error("Cart Counter Error:", error);
+      } else {
         setCartCount(0);
+      }
+    } catch (error) {
+      console.error('Error fetching cart count:', error);
+      setCartCount(0);
     }
-}
+  };
+
 
   useEffect(() => {
     /**user Details & cart count**/
